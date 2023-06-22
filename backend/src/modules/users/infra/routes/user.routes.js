@@ -1,5 +1,17 @@
 const { Router } = require('express')
 
+const {
+  createUser,
+  updateUser,
+  deleteUser,
+  listUser,
+  updateAvatar,
+} = require('../controllers/users.controller')
+
+const {
+  verifyPayloadForCreation,
+} = require('../../middlewares/users.middleware')
+
 const userRouters = Router()
 
 /**
@@ -10,26 +22,18 @@ const userRouters = Router()
  * DELETE - remoção
  *
  * CRUD - Create, Read, Update, Delete
+ *
+ * As rotas tem a responsabilidade de roteamento das requisições (Entrada e Saida)
  */
 
-userRouters.post('/', (request, response) => {
-  return response.json({ message: 'User created' })
-})
+userRouters.post('/', verifyPayloadForCreation(), createUser)
 
-userRouters.put('/:id', (request, response) => {
-  return response.json({ message: 'User updated' })
-})
+userRouters.put('/:id', updateUser)
 
-userRouters.patch('/:id', (request, response) => {
-  return response.json({ message: 'User updated' })
-})
+userRouters.delete('/:id', deleteUser)
 
-userRouters.get('/:id', (request, response) => {
-  return response.json({ message: 'User listed' })
-})
+userRouters.get('/:id', listUser)
 
-userRouters.delete('/:id', (request, response) => {
-  return response.json({ message: 'User deleted' })
-})
+userRouters.patch('/:id', updateAvatar)
 
 module.exports = userRouters

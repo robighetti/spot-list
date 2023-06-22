@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express')
+const { errors } = require('celebrate')
 
 const routes = require('./routes')
 
@@ -13,6 +14,8 @@ server.get('/health', (req, res) => {
 })
 
 server.use(routes)
+
+server.use(errors())
 
 server.listen(process.env.PORT, () => {
   console.log(`Server is running ${process.env.PORT}`)
