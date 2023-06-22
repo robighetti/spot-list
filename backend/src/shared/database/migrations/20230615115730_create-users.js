@@ -11,8 +11,7 @@ exports.up = function (knex) {
     table.timestamp('created_at').defaultTo(knex.fn.now())
     table.timestamp('updated_at').defaultTo(knex.fn.now())
   })
-
-};
+}
 
 /**
  * @param { import("knex").Knex } knex
@@ -20,4 +19,4 @@ exports.up = function (knex) {
  */
 exports.down = function (knex) {
   return knex.schema.dropTable('users')
-};
+}
