@@ -1,3 +1,8 @@
+const { generateHash } = require('../../../shared/utils/encrypt')
+const AppError = require('../../../shared/AppError')
+const MailProvider = require('../../../shared/providers/MailProvider')
+const { welcome } = require('../../../shared/providers/MailProvider/templates')
+
 /**
  * A classe tem a responsabilidade de executar uma ação e usar o banco de dados
  * se necessario para isso
@@ -19,16 +24,32 @@ class CreateUserService {
       payload.email,
     )
     if (userAlreadyExists) {
-      return {
-        error: 'User already exists',
-        msg: 'Email already exists',
-      }
-      // throw new Error('User already exists')
+      throw new AppError('User already exists')
     }
+
+    const { password } = payload
+
+    const hashedPassword = await generateHash(password)
+
+    /**
+     * É uma forma de appendar valores em uma variavel, ou seja, adicionar ou
+     * alterar algum valor
+     */
+    Object.assign(payload, { password: hashedPassword })
 
     const user = await this.usersRepository.create(payload)
 
-    return user
+    delete user.password
+
+    const mailProvider = new MailProvider()
+
+    await mailProvider.sendMail(
+      user.email,
+      'Bem vindo ao SpotList',
+      welcome({ name: user.name, token: '987988' }),
+    )
+
+    return { user }
   }
 }
 

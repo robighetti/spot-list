@@ -10,6 +10,8 @@ module.exports = {
   },
 
   async create(payload) {
-    return connection('users').insert(payload).returning('*')
+    const user = await connection('users').insert(payload).returning('*')
+
+    return user[0]
   },
 }
