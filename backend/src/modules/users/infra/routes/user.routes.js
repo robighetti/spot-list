@@ -6,10 +6,13 @@ const {
   deleteUser,
   listUser,
   updateAvatar,
+  listAllUsers,
+  forgotPassword,
 } = require('../controllers/users.controller')
 
 const {
   verifyPayloadForCreation,
+  verifyEmailToForgotPassword,
 } = require('../../middlewares/users.middleware')
 
 const userRouters = Router()
@@ -28,6 +31,13 @@ const userRouters = Router()
 
 userRouters.post('/', verifyPayloadForCreation(), createUser)
 
+userRouters.get('/', listAllUsers)
+
+userRouters.post('/forgot', verifyEmailToForgotPassword(), forgotPassword)
+
+/**
+ * Não implementado
+ */
 userRouters.put('/:id', updateUser)
 
 userRouters.delete('/:id', deleteUser)

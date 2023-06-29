@@ -14,4 +14,14 @@ module.exports = {
 
     return user[0]
   },
+
+  async listAll() {
+    return connection('users')
+      .select('id', 'name', 'email', 'created_at')
+      .orderBy('created_at', 'desc')
+  },
+
+  async saveTokenInDb(userId, token) {
+    return connection('user_tokens').insert({ user_id: userId, token })
+  },
 }

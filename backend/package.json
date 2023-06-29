@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon src/shared/infra/server.js",
     "create:migration": "knex migrate:make",
-    "run:migration": "knex migrate:latest"
+    "run:migration": "knex migrate:latest",
+    "rollback:migration": "knex migrate:rollback"
   },
   "keywords": [],
   "author": "",

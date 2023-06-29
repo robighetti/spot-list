@@ -10,4 +10,11 @@ module.exports = {
       },
     })
   },
+  verifyEmailToForgotPassword() {
+    return celebrate({
+      [Segments.BODY]: {
+        email: Joi.string().email().required(),
+      },
+    })
+  },
 }

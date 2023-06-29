@@ -4,7 +4,11 @@
 
 const usersRepository = require('../../repositories/users.repository')
 
+const MailProvider = require('../../../../shared/providers/MailProvider')
+
 const CreateUserService = require('../../services/CreateUserService')
+const ListAllUsersService = require('../../services/ListAllUsersService')
+const ForgotPasswordService = require('../../services/ForgotPasswordService')
 
 module.exports = {
   async createUser(request, response) {
@@ -33,7 +37,30 @@ module.exports = {
     return response.json({ message: 'User listed' })
   },
 
+  async listAllUsers(request, response) {
+    const listAllUsers = new ListAllUsersService(usersRepository)
+
+    const users = await listAllUsers.execute()
+    return response.json({ data: users })
+  },
+
   async updateAvatar(request, response) {
     return response.json({ message: 'Avatar updated' })
+  },
+
+  async forgotPassword(request, response) {
+    // Criou a conexao com o servidor de email
+    const mailProvider = new MailProvider()
+
+    const forgotPassword = new ForgotPasswordService(
+      usersRepository,
+      mailProvider,
+    )
+
+    const { email } = request.body
+
+    await forgotPassword.execute({ email })
+
+    return response.status(203).send()
   },
 }
