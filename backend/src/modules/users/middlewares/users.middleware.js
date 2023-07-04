@@ -17,4 +17,22 @@ module.exports = {
       },
     })
   },
+  verifyPayloadForResetPassword() {
+    return celebrate({
+      [Segments.PARAMS]: {
+        token: Joi.string().required().min(6),
+      },
+      [Segments.BODY]: {
+        password: Joi.string().required().min(6),
+      },
+    })
+  },
+  verifyPayloadForLogin() {
+    return celebrate({
+      [Segments.BODY]: {
+        email: Joi.string().email().required(),
+        password: Joi.string().required().min(6),
+      },
+    })
+  },
 }

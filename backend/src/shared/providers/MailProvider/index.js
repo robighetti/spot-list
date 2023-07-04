@@ -6,34 +6,24 @@ class MailProvider {
    */
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: 'sandbox.smtp.mailtrap.io',
-      port: 2525,
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
       debug: true,
       logger: true,
-      auth: {
-        user: 'a1a121de64b1ad',
-        pass: 'de447327e8c1de',
-      },
-    })
-    /* this.tranporter = nodemailer.createTransport({
-      host: 'sandbox.smtp.mailtrap.io',
-      port: 2525,
-      debug: true,
-      logger: true,
-      secureConnection: false,
+      secureConnection: process.env.MAIL_SECURITY,
       tls: {
         ciphers: 'SSLv3',
       },
       auth: {
-        user: '7466b567d37108',
-        pass: '********8b5e',
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
       },
-    }) */
+    })
   }
 
   async sendMail(email, subject, template) {
     await this.transporter.sendMail({
-      from: 'Equipe SpotList <robighetti@gmail.com>',
+      from: process.env.MAIL_FROM,
       to: email,
       subject,
       html: template,

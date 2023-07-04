@@ -8,11 +8,13 @@ const {
   updateAvatar,
   listAllUsers,
   forgotPassword,
+  resetPassword,
 } = require('../controllers/users.controller')
 
 const {
   verifyPayloadForCreation,
   verifyEmailToForgotPassword,
+  verifyPayloadForResetPassword,
 } = require('../../middlewares/users.middleware')
 
 const userRouters = Router()
@@ -35,6 +37,12 @@ userRouters.get('/', listAllUsers)
 
 userRouters.post('/forgot', verifyEmailToForgotPassword(), forgotPassword)
 
+userRouters.patch(
+  '/reset-password/:token',
+  verifyPayloadForResetPassword(),
+  resetPassword,
+)
+
 /**
  * Não implementado
  */
@@ -44,6 +52,6 @@ userRouters.delete('/:id', deleteUser)
 
 userRouters.get('/:id', listUser)
 
-userRouters.patch('/:id', updateAvatar)
+userRouters.patch('/avatar/:id', updateAvatar)
 
 module.exports = userRouters

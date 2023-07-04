@@ -9,6 +9,7 @@ const MailProvider = require('../../../../shared/providers/MailProvider')
 const CreateUserService = require('../../services/CreateUserService')
 const ListAllUsersService = require('../../services/ListAllUsersService')
 const ForgotPasswordService = require('../../services/ForgotPasswordService')
+const ResetUserPasswordService = require('../../services/ResetUserPasswordService')
 
 module.exports = {
   async createUser(request, response) {
@@ -62,5 +63,16 @@ module.exports = {
     await forgotPassword.execute({ email })
 
     return response.status(203).send()
+  },
+
+  async resetPassword(request, response) {
+    const { token } = request.params
+    const { password } = request.body
+
+    const resetPassword = new ResetUserPasswordService(usersRepository)
+
+    const updatedPassword = await resetPassword.execute({ token, password })
+
+    return response.json({ data: updatedPassword })
   },
 }
