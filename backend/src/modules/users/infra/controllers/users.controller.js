@@ -10,6 +10,7 @@ const CreateUserService = require('../../services/CreateUserService')
 const ListAllUsersService = require('../../services/ListAllUsersService')
 const ForgotPasswordService = require('../../services/ForgotPasswordService')
 const ResetUserPasswordService = require('../../services/ResetUserPasswordService')
+const UpdateAvatarService = require('../../services/UpdateAvatarService')
 
 module.exports = {
   async createUser(request, response) {
@@ -46,7 +47,16 @@ module.exports = {
   },
 
   async updateAvatar(request, response) {
-    return response.json({ message: 'Avatar updated' })
+    const { file, user } = request
+
+    const updateAvatar = new UpdateAvatarService(usersRepository)
+
+    const userUpdated = await updateAvatar.execute({
+      file,
+      user,
+    })
+
+    return response.json({ data: userUpdated })
   },
 
   async forgotPassword(request, response) {

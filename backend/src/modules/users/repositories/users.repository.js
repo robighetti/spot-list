@@ -14,6 +14,14 @@ module.exports = {
     }
   },
 
+  async findById(id) {
+    try {
+      return connection('users').where('id', id).first()
+    } catch (error) {
+      throw new AppError(error.message)
+    }
+  },
+
   async create(payload) {
     try {
       const user = await connection('users').insert(payload).returning('*')
@@ -66,6 +74,17 @@ module.exports = {
       })
     } catch (err) {
       throw new AppError(err.message)
+    }
+  },
+
+  async update(payload) {
+    try {
+      return connection('users')
+        .update(payload)
+        .where('id', payload.id)
+        .returning('*')
+    } catch (error) {
+      throw new AppError(error.message)
     }
   },
 }

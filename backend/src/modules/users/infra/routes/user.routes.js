@@ -1,4 +1,5 @@
 const { Router } = require('express')
+const multer = require('multer')
 
 const {
   createUser,
@@ -17,7 +18,12 @@ const {
   verifyPayloadForResetPassword,
 } = require('../../middlewares/users.middleware')
 
+const ensureAuthenticated = require('../../../../shared/middlewares/ensure-autenticated')
+const uploadConfig = require('../../../../config/upload')
+
 const userRouters = Router()
+
+const upload = multer(uploadConfig)
 
 /**
  * POST - criação
@@ -43,15 +49,20 @@ userRouters.patch(
   resetPassword,
 )
 
+userRouters.patch(
+  '/avatar',
+  ensureAuthenticated,
+  upload.single('avatar'),
+  updateAvatar,
+)
+
 /**
  * Não implementado
  */
-userRouters.put('/:id', updateUser)
+userRouters.put('/:id', ensureAuthenticated, updateUser)
 
-userRouters.delete('/:id', deleteUser)
+userRouters.delete('/:id', ensureAuthenticated, deleteUser)
 
-userRouters.get('/:id', listUser)
-
-userRouters.patch('/avatar/:id', updateAvatar)
+userRouters.get('/:id', ensureAuthenticated, listUser)
 
 module.exports = userRouters
