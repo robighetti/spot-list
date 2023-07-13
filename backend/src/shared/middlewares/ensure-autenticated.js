@@ -15,6 +15,7 @@ module.exports = async (request, response, next) => {
 
     request.user = {
       id: decoded.id,
+      name: decoded.name,
     }
 
     return next()
