@@ -1,7 +1,17 @@
+const SpotifyProvider = require('../../../../shared/providers/SpotifyProvider')
+
+const CreateMusicListService = require('../../services/CreateMusicListService')
+
 module.exports = {
   async createList(request, response) {
-    console.log(request.user)
+    const spotifyProvider = new SpotifyProvider()
 
-    return response.json({ message: 'List Created and logged' })
+    const album = await spotifyProvider.getAlbuns()
+
+    /*  const createMusicListService = new CreateMusicListService(spotifyProvider)
+
+    const data = await createMusicListService.execute({ msg: true }) */
+
+    return response.json({ data: album })
   },
 }
