@@ -1,17 +1,28 @@
 const SpotifyProvider = require('../../../../shared/providers/SpotifyProvider')
 
-const CreateMusicListService = require('../../services/CreateMusicListService')
+const GetTracksService = require('../../../lists/services/GetTracksService')
+const GetAlbumTracksService = require('../../../lists/services/GetAlbumTracksService')
+
+const spotifyProvider = new SpotifyProvider()
 
 module.exports = {
-  async createList(request, response) {
-    const spotifyProvider = new SpotifyProvider()
+  async getTracks(request, response) {
+    const { name, album, artist } = request.query
 
-    const album = await spotifyProvider.getAlbuns()
+    const getTracksService = new GetTracksService(spotifyProvider)
 
-    /*  const createMusicListService = new CreateMusicListService(spotifyProvider)
+    const tracks = await getTracksService.execute({ name, album, artist })
 
-    const data = await createMusicListService.execute({ msg: true }) */
+    return response.json({ data: tracks })
+  },
 
-    return response.json({ data: album })
+  async getAlbum(request, response) {
+    const getAlbum = new GetAlbumTracksService(spotifyProvider)
+
+    const { albumId } = request.params
+
+    const albumTracks = await getAlbum.execute(albumId)
+
+    return response.json({ albumTracks })
   },
 }

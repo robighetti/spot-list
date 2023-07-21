@@ -15,26 +15,20 @@ class SpotifyProvider {
     this.spotify.setAccessToken(body.access_token)
   }
 
-  async getAlbuns() {
+  async getTracks(filter) {
     await this.connectToSpotify()
 
-    const results = await this.spotify.searchTracks('artist:O Rappa')
+    const results = await this.spotify.searchTracks(filter)
 
-    const albumsFiltered = results.body.tracks.items.map((album) => {
-      return {
-        albumId: album.id,
-        albumName: album.name,
-        albumArtist: album.artists.map((artist) => {
-          return {
-            id: artist.id,
-            name: artist.name,
-          }
-        }),
-        totalOfMusics: album.total_tracks,
-      }
-    })
+    return results.body
+  }
 
-    return albumsFiltered
+  async getAlbum(albumId) {
+    await this.connectToSpotify()
+
+    const results = await this.spotify.getAlbum(albumId)
+
+    return results.body
   }
 
   async getAlbunsByArtist() {}

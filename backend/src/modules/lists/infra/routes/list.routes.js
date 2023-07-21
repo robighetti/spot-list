@@ -1,9 +1,11 @@
 const { Router } = require('express')
 
-const { createList } = require('../controllers/lists.controller')
+const { getTracks, getAlbum } = require('../controllers/lists.controller')
 
 const listRouters = Router()
 
-listRouters.post('/', createList)
+listRouters.get('/tracks', getTracks)
+
+listRouters.get('/album/:albumId', getAlbum)
 
 module.exports = listRouters
