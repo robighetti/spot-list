@@ -25,4 +25,12 @@ module.exports = {
 
     return response.json({ albumTracks })
   },
+
+  async createPlaylist(request, response) {
+    return response.json({ message: 'createPlaylist' })
+  },
+
+  async updatePlaylist(request, response) {
+    return response.json({ message: 'updatePlaylist' })
+  },
 }
