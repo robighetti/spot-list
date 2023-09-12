@@ -2,6 +2,7 @@ const { generateHash } = require('../../../shared/utils/encrypt')
 const AppError = require('../../../shared/AppError')
 const MailProvider = require('../../../shared/providers/MailProvider')
 const { welcome } = require('../../../shared/providers/MailProvider/templates')
+const { v4: uuid } = require('uuid')
 
 /**
  * A classe tem a responsabilidade de executar uma ação e usar o banco de dados
@@ -46,7 +47,7 @@ class CreateUserService {
     await mailProvider.sendMail(
       user.email,
       'Bem vindo ao SpotList',
-      welcome({ name: user.name, token: '987988' }),
+      welcome({ name: user.name, token: uuid() }),
     )
 
     return { user }

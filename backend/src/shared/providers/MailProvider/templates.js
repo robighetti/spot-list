@@ -11,7 +11,7 @@ const welcome = ({ name, token }) => {
     <h1>Olá ${name}</h1>
     <span>Seja bem vindo a nossa plataforma de compartilhamento e gravação de listas de musicas</span>
   
-    <h5>Seu Token de ativação é ${token}</h5>
+    <a href="http://localhost:3000/activate/${token}">Clique aqui para ativar sua conta</a>
   </body>
   </html>
   `
