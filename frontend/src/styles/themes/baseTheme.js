@@ -7,6 +7,7 @@ export default {
 
   text: '#0D0D0D',
   background: '#333',
+  gray: '#999ß',
 
   success_title: '#2e656a',
   success_background: '#e6fffa',

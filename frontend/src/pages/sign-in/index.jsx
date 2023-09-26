@@ -1,7 +1,14 @@
+import { useCallback, useRef } from 'react'
+
 import { Link } from 'react-router-dom'
-import { AiOutlineArrowRight } from 'react-icons/ai'
+import { AiOutlineArrowRight, AiFillLock } from 'react-icons/ai'
+import { MdOutlineMail } from 'react-icons/md'
 
 import { Form } from '@unform/web'
+
+import * as Yup from 'yup'
+
+import getValidationErrors from '../../shared/utils/getValidationErrors'
 
 import { Input, Button } from '../../shared/components'
 
@@ -10,19 +17,59 @@ import logo from '../../assets/logo.png'
 import { Container, Content, Background } from './styles'
 
 export const SignIn = () => {
+  const formRef = useRef(null)
+
+  const handleSubmit = useCallback(async (formData) => {
+    try {
+      formRef.current?.setErrors({})
+
+      const schema = Yup.object().shape({
+        email: Yup.string()
+          .required('Email obrigatório')
+          .email('Digite um email válido'),
+        password: Yup.string().required('Senha obrigatória'),
+      })
+
+      await schema.validate(formData, { abortEarly: false })
+
+      const { email, password } = formData
+
+      console.log(email, password)
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const error = getValidationErrors(err)
+
+        formRef.current.setErrors(error)
+        console.error(err)
+        return
+      }
+
+      console.error(err)
+    }
+  }, [])
   return (
     <Container>
       <Content>
         <img src={logo} alt="SpotList" />
 
-        <Form onSubmit={() => console.log('ok')}>
+        <Form ref={formRef} onSubmit={handleSubmit}>
           <h1>Faça seu Login</h1>
 
-          <Input name="email" placeholder="Digite seu email" />
+          <Input
+            name="email"
+            type="email"
+            placeholder="Digite seu email"
+            icon={MdOutlineMail}
+          />
 
-          <Input name="password" placeholder="Digite sua senha" />
+          <Input
+            name="password"
+            placeholder="Digite sua senha"
+            icon={AiFillLock}
+            type="password"
+          />
 
-          <Button type="submit">Qualquer outro texto</Button>
+          <Button type="submit">Entrar</Button>
 
           <Link to="#">Esqueci minha senha</Link>
         </Form>

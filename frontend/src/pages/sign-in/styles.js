@@ -24,6 +24,8 @@ export const Content = styled.div`
   form {
     display: flex;
     flex-direction: column;
+    width: 440px;
+    text-align: center;
 
     h1 {
       margin-bottom: 24px;
