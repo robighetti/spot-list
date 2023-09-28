@@ -35,7 +35,7 @@ export const Input = ({ name, icon: Icon, ...rest }) => {
   }, [fieldName, registerField])
 
   return (
-    <Container isFocused={isFocused} isFilled={isFilled}>
+    <Container isFocused={isFocused} isFilled={isFilled} isErrored={!!error}>
       {Icon && <Icon size={20} />}
       <input
         type="text"
@@ -48,7 +48,6 @@ export const Input = ({ name, icon: Icon, ...rest }) => {
 
       {error && (
         <Error title={error}>
-          {error}
           <FiAlertCircle color={theme.error_title} size={20} />
         </Error>
       )}

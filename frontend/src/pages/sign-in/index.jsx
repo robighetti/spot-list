@@ -27,7 +27,9 @@ export const SignIn = () => {
         email: Yup.string()
           .required('Email obrigatório')
           .email('Digite um email válido'),
-        password: Yup.string().required('Senha obrigatória'),
+        password: Yup.string()
+          .required('Senha obrigatória')
+          .min(6, 'Senha com mínimo de 6 caracteres'),
       })
 
       await schema.validate(formData, { abortEarly: false })
