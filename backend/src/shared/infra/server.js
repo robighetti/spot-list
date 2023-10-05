@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const { errors } = require('celebrate')
 const Youch = require('youch')
+const cors = require('cors')
 
 require('express-async-errors')
 
@@ -11,6 +12,8 @@ const routes = require('./routes')
 const server = express()
 
 server.use(express.json())
+
+server.use(cors({ origin: '*' }))
 
 server.get('/health', (req, res) => {
   return res.json({ message: 'App is running' })

@@ -9,7 +9,8 @@ import { Form } from '@unform/web'
 import * as Yup from 'yup'
 
 import getValidationErrors from '../../shared/utils/getValidationErrors'
-
+import { useAuth } from '../../shared/hooks/auth'
+import { useToast } from '../../shared/hooks/Toast'
 import { Input, Button } from '../../shared/components'
 
 import logo from '../../assets/logo.png'
@@ -19,36 +20,44 @@ import { Container, Content, Background } from './styles'
 export const SignIn = () => {
   const formRef = useRef(null)
 
-  const handleSubmit = useCallback(async (formData) => {
-    try {
-      formRef.current?.setErrors({})
+  const { signIn } = useAuth()
+  const { addToast } = useToast()
 
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .required('Email obrigatório')
-          .email('Digite um email válido'),
-        password: Yup.string()
-          .required('Senha obrigatória')
-          .min(6, 'Senha com mínimo de 6 caracteres'),
-      })
+  const handleSubmit = useCallback(
+    async (formData) => {
+      try {
+        formRef.current?.setErrors({})
 
-      await schema.validate(formData, { abortEarly: false })
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('Email obrigatório')
+            .email('Digite um email válido'),
+          password: Yup.string()
+            .required('Senha obrigatória')
+            .min(6, 'Senha com mínimo de 6 caracteres'),
+        })
 
-      const { email, password } = formData
+        await schema.validate(formData, { abortEarly: false })
 
-      console.log(email, password)
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const error = getValidationErrors(err)
+        const { email, password } = formData
 
-        formRef.current.setErrors(error)
-        console.error(err)
-        return
+        await signIn(email, password)
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const error = getValidationErrors(err)
+
+          formRef.current.setErrors(error)
+        }
+
+        addToast({
+          type: 'info',
+          title: 'Erro na autenticação',
+          description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
+        })
       }
-
-      console.error(err)
-    }
-  }, [])
+    },
+    [signIn, addToast],
+  )
   return (
     <Container>
       <Content>

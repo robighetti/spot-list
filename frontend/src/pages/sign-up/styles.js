@@ -37,6 +37,19 @@ export const Content = styled.div`
       width: 90%;
     }
 
+    > span {
+      color: ${({ theme }) => theme.text};
+      font-weight: 500;
+      margin-top: 6px;
+      text-align: right;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        transform: translateY(4px);
+      }
+    }
+
     > button {
       margin-top: 24px;
     }

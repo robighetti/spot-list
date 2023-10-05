@@ -1,11 +1,7 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
-import { Link } from 'react-router-dom'
-import {
-  AiOutlineArrowRight,
-  AiFillLock,
-  AiOutlineArrowLeft,
-} from 'react-icons/ai'
+import { Link, useNavigate } from 'react-router-dom'
+import { AiFillLock, AiOutlineArrowLeft } from 'react-icons/ai'
 import { FaUserAlt } from 'react-icons/fa'
 import { MdOutlineMail } from 'react-icons/md'
 
@@ -19,10 +15,15 @@ import { Input, Button } from '../../shared/components'
 
 import logo from '../../assets/logo.png'
 
+import { signUp } from '../../api/spot-list-api'
+
 import { Container, Content, Background } from './styles'
 
 export const SignUp = () => {
   const formRef = useRef(null)
+  const navigate = useNavigate()
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = useCallback(async (formData) => {
     try {
@@ -36,13 +37,19 @@ export const SignUp = () => {
         password: Yup.string()
           .required('Senha obrigatória')
           .min(6, 'Senha com mínimo de 6 caracteres'),
+        password_confirmation: Yup.string().oneOf(
+          [Yup.ref('password'), null],
+          'Passwords precisam ser iguais',
+        ),
       })
 
       await schema.validate(formData, { abortEarly: false })
 
-      const { email, password } = formData
+      const { name, email, password } = formData
 
-      console.log(email, password)
+      await signUp({ name, email, password })
+
+      navigate('/')
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const error = getValidationErrors(err)
@@ -54,6 +61,10 @@ export const SignUp = () => {
 
       console.error(err)
     }
+  }, [])
+
+  const handleShowPassword = useCallback(() => {
+    setShowPassword((prevState) => !prevState)
   }, [])
   return (
     <Container>
@@ -85,15 +96,16 @@ export const SignUp = () => {
             name="password"
             placeholder="Digite sua senha"
             icon={AiFillLock}
-            type="password"
+            type={showPassword ? 'text' : 'password'}
           />
 
           <Input
             name="password_confirmation"
             placeholder="Confirme sua senha"
             icon={AiFillLock}
-            type="password"
+            type={showPassword ? 'text' : 'password'}
           />
+          <span onClick={handleShowPassword}>Mostrar senha</span>
 
           <Button type="submit">Entrar</Button>
         </Form>
