@@ -30,4 +30,30 @@ const signUp = async (params) => {
   }
 }
 
-export { login, signUp }
+/**
+ * @description: Chamada a API para esqueci minha senha
+ * @param {*} params (email)
+ */
+const forgotPassword = async (params) => {
+  try {
+    const result = await api.post('/users/forgot-password', params)
+
+    return result.data
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
+/**
+ * @description: Chamada a API para resetar a senha
+ * @param {*} params (password, token)
+ */
+const resetPassword = async (params) => {
+  const result = await api.patch(`/users/reset-password/${params.token}`, {
+    password: params.password,
+  })
+
+  return result.data
+}
+
+export { login, signUp, forgotPassword, resetPassword }

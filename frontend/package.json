@@ -42,6 +42,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@rocketseat/eslint-config": "^2.1.0",
     "eslint": "^8.49.0",
     "typescript": "^5.2.2"

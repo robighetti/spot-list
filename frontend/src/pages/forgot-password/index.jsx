@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react'
 
-import { Link } from 'react-router-dom'
-import { AiOutlineArrowRight, AiFillLock } from 'react-icons/ai'
+import { Link, useNavigate } from 'react-router-dom'
+import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { MdOutlineMail } from 'react-icons/md'
 
 import { Form } from '@unform/web'
@@ -9,18 +9,19 @@ import { Form } from '@unform/web'
 import * as Yup from 'yup'
 
 import getValidationErrors from '../../shared/utils/getValidationErrors'
-import { useAuth } from '../../shared/hooks/auth'
+
 import { useToast } from '../../shared/hooks/Toast'
 import { Input, Button } from '../../shared/components'
+import { forgotPassword } from '../../api/spot-list-api'
 
 import logo from '../../assets/logo.png'
 
 import { Container, Content, Background } from './styles'
 
-export const SignIn = () => {
+export const ForgotPasssword = () => {
   const formRef = useRef(null)
+  const navigate = useNavigate()
 
-  const { signIn } = useAuth()
   const { addToast } = useToast()
 
   const handleSubmit = useCallback(
@@ -32,21 +33,20 @@ export const SignIn = () => {
           email: Yup.string()
             .required('Email obrigatório')
             .email('Digite um email válido'),
-          password: Yup.string()
-            .required('Senha obrigatória')
-            .min(6, 'Senha com mínimo de 6 caracteres'),
         })
 
         await schema.validate(formData, { abortEarly: false })
 
-        const { email, password } = formData
+        const { email } = formData
 
-        await signIn(email, password)
+        await forgotPassword({ email })
 
         addToast({
           type: 'success',
-          title: 'Usuário logado com sucesso!',
+          title: 'Email enviado com sucesso',
         })
+
+        navigate('/')
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const error = getValidationErrors(err)
@@ -56,12 +56,12 @@ export const SignIn = () => {
 
         addToast({
           type: 'error',
-          title: 'Erro na autenticação',
-          description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
+          title: 'Erro no envio do email',
+          description: 'Informe um email válido',
         })
       }
     },
-    [signIn, addToast],
+    [addToast],
   )
   return (
     <Container>
@@ -69,7 +69,7 @@ export const SignIn = () => {
         <img src={logo} alt="SpotList" />
 
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Faça seu Login</h1>
+          <h1>Esqueci minha senha</h1>
 
           <Input
             name="email"
@@ -78,19 +78,10 @@ export const SignIn = () => {
             icon={MdOutlineMail}
           />
 
-          <Input
-            name="password"
-            placeholder="Digite sua senha"
-            icon={AiFillLock}
-            type="password"
-          />
-
-          <Button type="submit">Entrar</Button>
-
-          <Link to="/forgot-password">Esqueci minha senha</Link>
+          <Button type="submit">Resetar senha</Button>
         </Form>
-        <Link to="/sign-up">
-          Criar conta <AiOutlineArrowRight size={24} />
+        <Link to="/">
+          Voltar para login <AiOutlineArrowLeft size={24} />
         </Link>
       </Content>
 

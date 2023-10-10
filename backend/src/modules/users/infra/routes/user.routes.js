@@ -41,7 +41,11 @@ userRouters.post('/', verifyPayloadForCreation(), createUser)
 
 userRouters.get('/', listAllUsers)
 
-userRouters.post('/forgot', verifyEmailToForgotPassword(), forgotPassword)
+userRouters.post(
+  '/forgot-password',
+  verifyEmailToForgotPassword(),
+  forgotPassword,
+)
 
 userRouters.patch(
   '/reset-password/:token',

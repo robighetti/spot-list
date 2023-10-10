@@ -25,9 +25,7 @@ class ForgotPasswordService {
 
     const token = await generateToken()
 
-    const link = process.env.PATH_FRONTEND.concat(
-      `/reset-password?token=${token}`,
-    )
+    const link = process.env.PATH_FRONTEND.concat(`/reset-password/${token}`)
     const mail = forgotPassword({ name: user.name, link })
 
     await this.usersRepository.saveTokenInDb(user.id, token)

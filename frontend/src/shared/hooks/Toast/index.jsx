@@ -11,6 +11,10 @@ import {
   FiInfo,
 } from 'react-icons/fi'
 
+import { Container } from './styles'
+
+import './styles.css'
+
 const ToastContext = createContext({})
 
 const ToastProvider = ({ children }) => {
@@ -18,10 +22,10 @@ const ToastProvider = ({ children }) => {
     const { type, title, description } = message
 
     const Message = () => (
-      <div>
+      <Container>
         <strong>{title}</strong>
         {description && <span>{description}</span>}
-      </div>
+      </Container>
     )
 
     const icons = {
@@ -41,7 +45,7 @@ const ToastProvider = ({ children }) => {
   return (
     <ToastContext.Provider value={{ addToast }}>
       {children}
-      <ToastContainer autoClose={3000} />
+      <ToastContainer style={{ width: '350px' }} />
     </ToastContext.Provider>
   )
 }
