@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AiOutlineArrowRight, AiFillLock } from 'react-icons/ai'
 import { MdOutlineMail } from 'react-icons/md'
 
@@ -19,6 +19,7 @@ import { Container, Content, Background } from './styles'
 
 export const SignIn = () => {
   const formRef = useRef(null)
+  const navigate = useNavigate()
 
   const { signIn } = useAuth()
   const { addToast } = useToast()
@@ -47,6 +48,8 @@ export const SignIn = () => {
           type: 'success',
           title: 'Usuário logado com sucesso!',
         })
+
+        navigate('/home')
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const error = getValidationErrors(err)
