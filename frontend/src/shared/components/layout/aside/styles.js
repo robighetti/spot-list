@@ -3,5 +3,6 @@ import styled from 'styled-components'
 export const Container = styled.div`
   grid-area: AS;
 
-  background: red;
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.contrast};
 `
