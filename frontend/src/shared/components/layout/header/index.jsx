@@ -18,8 +18,6 @@ export const Header = () => {
   const { user } = useAuth()
   const theme = useTheme()
 
-  console.log(user)
-
   return (
     <Container>
       <Content>
