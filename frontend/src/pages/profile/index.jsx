@@ -1,11 +1,17 @@
 import { useCallback, useRef } from 'react'
-
-import { Form } from '@unform/web'
+import { FiCamera } from 'react-icons/fi'
 
 import { BaseLayout } from '../../shared/layouts/BaseLayout/BaseLayout'
-import { Input, Button } from '../../shared/components'
+import { Input } from '../../shared/components'
 
-import { Container } from './styles'
+import {
+  Container,
+  Header,
+  Image,
+  ImageContainer,
+  ButtonImage,
+  FormContainer,
+} from './styles'
 
 export const Profile = () => {
   const formRef = useRef(null)
@@ -15,40 +21,47 @@ export const Profile = () => {
   }, [])
 
   return (
-    <Container>
-      <BaseLayout>
-        <div>
-          <header>
-            <img
+    <BaseLayout>
+      <Container>
+        <Header>
+          <ImageContainer>
+            <Image
               src="https://avatars.githubusercontent.com/u/45999236?v=4"
               alt="Rodrigo Bighetti"
             />
 
-            <span>Rodrigo Bighetti</span>
-          </header>
+            <ButtonImage htmlFor="picture">
+              <FiCamera />
+              <input type="file" id="picture" />
+            </ButtonImage>
+          </ImageContainer>
+
+          <span>Rodrigo Bighetti</span>
+        </Header>
+
+        <FormContainer ref={formRef} onSubmit={handleSubmit}>
+          <Input name="name" placeholder="Nome" />
+          <Input name="email" placeholder="E-mail" />
 
           <div>
-            <Form ref={formRef} onSubmit={handleSubmit}>
-              <Input name="name" placeholder="Nome" />
-              <Input name="email" placeholder="E-mail" />
-
-              <hr />
-
-              <Input
-                name="old_password"
-                type="password"
-                placeholder="Senha antiga"
-              />
-              <Input name="password" type="password" placeholder="Nova Senha" />
-              <Input
-                name="confirm_password"
-                type="password"
-                placeholder="Confirme sua Senha"
-              />
-            </Form>
+            <hr />
+            <span>Alteração de senha</span>
+            <hr />
           </div>
-        </div>
-      </BaseLayout>
-    </Container>
+
+          <Input
+            name="old_password"
+            type="password"
+            placeholder="Senha antiga"
+          />
+          <Input name="password" type="password" placeholder="Nova Senha" />
+          <Input
+            name="confirm_password"
+            type="password"
+            placeholder="Confirme sua Senha"
+          />
+        </FormContainer>
+      </Container>
+    </BaseLayout>
   )
 }

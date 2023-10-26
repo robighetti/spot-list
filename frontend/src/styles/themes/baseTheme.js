@@ -8,7 +8,7 @@ export default {
   text: '#0D0D0D',
   background: '#333',
   contrast: '#fff',
-  gray: '#999ß',
+  gray: '#999',
 
   shadow: '0 0 10px rgb(255, 255, 255, 0.5)',
 
