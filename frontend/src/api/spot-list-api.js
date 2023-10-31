@@ -49,11 +49,25 @@ const forgotPassword = async (params) => {
  * @param {*} params (password, token)
  */
 const resetPassword = async (params) => {
-  const result = await api.patch(`/users/reset-password/${params.token}`, {
-    password: params.password,
-  })
+  try {
+    const result = await api.patch(`/users/reset-password/${params.token}`, {
+      password: params.password,
+    })
 
-  return result.data
+    return result.data
+  } catch (error) {
+    throw new Error(error.message)
+  }
 }
 
-export { login, signUp, forgotPassword, resetPassword }
+const uploadImage = async (avatar) => {
+  try {
+    const result = await api.patch('users/avatar', avatar)
+
+    return result.data
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
+export { login, signUp, forgotPassword, resetPassword, uploadImage }

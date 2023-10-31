@@ -2,7 +2,10 @@ import styled from 'styled-components'
 
 import { Form } from '@unform/web'
 
-export const Container = styled.div``
+export const Container = styled.div`
+  width: 550px;
+  margin: 0 auto;
+`
 
 export const Header = styled.header`
   display: flex;

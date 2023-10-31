@@ -1,26 +1,9 @@
-import { Button } from '../../components'
+import { Container } from './styles'
 
-import {
-  Container,
-  ToolbarContainer,
-  ActionButtonContainer,
-  EndButtonContainer,
-} from './styles'
-
-export const BaseLayout = ({ children }) => {
+export const BaseLayout = ({ children, toolbar }) => {
   return (
     <Container>
-      <ToolbarContainer>
-        <ActionButtonContainer>
-          <Button>Salvar</Button>
-
-          <Button>Novo</Button>
-        </ActionButtonContainer>
-
-        <EndButtonContainer>
-          <Button>Voltar</Button>
-        </EndButtonContainer>
-      </ToolbarContainer>
+      {toolbar && <div>{toolbar}</div>}
 
       {children}
     </Container>

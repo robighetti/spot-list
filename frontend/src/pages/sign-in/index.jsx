@@ -64,7 +64,7 @@ export const SignIn = () => {
         })
       }
     },
-    [signIn, addToast],
+    [signIn, addToast, navigate],
   )
   return (
     <Container>
