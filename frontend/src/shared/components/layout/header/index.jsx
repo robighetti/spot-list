@@ -1,7 +1,10 @@
+import { useState, useEffect } from 'react'
+
 /* eslint-disable no-template-curly-in-string */
 import { FiEdit } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { useTheme } from 'styled-components'
+import { environment } from '../../../environments'
 
 import { useAuth } from '../../../hooks/auth'
 
@@ -16,7 +19,29 @@ import {
 
 export const Header = () => {
   const { user } = useAuth()
+
   const theme = useTheme()
+  const [picture, setPicture] = useState(() => {
+    const appData = JSON.parse(localStorage.getItem(environment.APP_NAME))
+
+    if (appData) {
+      return appData.user.avatar
+    }
+
+    return ''
+  })
+
+  useEffect(() => {
+    setPicture(() => {
+      const appData = JSON.parse(localStorage.getItem(environment.APP_NAME))
+
+      if (appData) {
+        return appData.user.avatar
+      }
+
+      return ''
+    })
+  }, [user.avatar])
 
   return (
     <Container>
@@ -24,8 +49,8 @@ export const Header = () => {
         <ImageContainer>
           <Image
             src={
-              user.avatar
-                ? user.avatar
+              picture
+                ? `${environment.URL_API_SPOTLIST + '/files/' + picture}`
                 : `https://ui-avatars.com/api/?font-size=0.33&background=${theme.background.substring(
                     1,
                     theme.background.length,

@@ -1,6 +1,7 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
+import { useTheme } from 'styled-components'
 
 import * as Yup from 'yup'
 
@@ -25,9 +26,21 @@ import {
 export const Profile = () => {
   const formRef = useRef(null)
 
+  const theme = useTheme()
+
   const { user } = useAuth()
   const { addToast } = useToast()
   const navigate = useNavigate()
+
+  const [picture, setPicture] = useState(() => {
+    const appData = JSON.parse(localStorage.getItem(environment.APP_NAME))
+
+    if (appData) {
+      return appData.user.avatar
+    }
+
+    return ''
+  })
 
   const handleSubmit = useCallback(
     async (data) => {
@@ -76,7 +89,8 @@ export const Profile = () => {
 
     const { data } = await uploadImage(formData)
 
-    localStorage.setItem(environment.APP_NAME, { user: data })
+    // updateUser(data)
+    setPicture(data.avatar)
   }, [])
 
   return (
@@ -91,7 +105,20 @@ export const Profile = () => {
       <Container>
         <Header>
           <ImageContainer>
-            <Image src={user.avatar} alt="Rodrigo Bighetti" />
+            <Image
+              src={
+                picture
+                  ? `${environment.URL_API_SPOTLIST + '/files/' + picture}`
+                  : `https://ui-avatars.com/api/?font-size=0.33&background=${theme.background.substring(
+                      1,
+                      theme.background.length,
+                    )}&color=${theme.contrast.substring(
+                      1,
+                      theme.contrast.length,
+                    )}&name=${user.name}`
+              }
+              alt="Rodrigo Bighetti"
+            />
 
             <ButtonImage htmlFor="picture">
               <FiCamera />

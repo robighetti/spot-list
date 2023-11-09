@@ -22,6 +22,7 @@ export const Header = styled.header`
 
 export const Image = styled.img`
   width: 200px;
+  height: 200px;
   border-radius: 50%;
   box-shadow: ${({ theme }) => theme.box_shadow};
   margin-top: 8px;

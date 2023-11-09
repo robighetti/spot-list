@@ -29,6 +29,20 @@ const AuthProvider = ({ children }) => {
     setData({})
   }, [])
 
+  const updateUser = useCallback(
+    (userUpdated) => {
+      const updatedUser = JSON.stringify({
+        user: userUpdated,
+        token: data.token,
+      })
+
+      setData({ user: userUpdated, token: data.token })
+
+      localStorage.setItem(environment.APP_NAME, updatedUser)
+    },
+    [data.token],
+  )
+
   return (
     <AuthContext.Provider
       value={{
@@ -39,7 +53,7 @@ const AuthProvider = ({ children }) => {
     >
       {children}
     </AuthContext.Provider>
-  )
+  )``
 }
 
 function useAuth() {
