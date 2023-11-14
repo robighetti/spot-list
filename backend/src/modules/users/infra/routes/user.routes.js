@@ -60,11 +60,11 @@ userRouters.patch(
   updateAvatar,
 )
 
+userRouters.put('/:userId', ensureAuthenticated, updateUser)
+
 /**
  * Não implementado
  */
-userRouters.put('/:id', ensureAuthenticated, updateUser)
-
 userRouters.delete('/:id', ensureAuthenticated, deleteUser)
 
 userRouters.get('/:id', ensureAuthenticated, listUser)

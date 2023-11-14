@@ -11,7 +11,7 @@ import { Input, FormToolbar } from '../../shared/components'
 import { useAuth } from '../../shared/hooks/auth'
 import { useToast } from '../../shared/hooks/Toast'
 import getValidationErrors from '../../shared/utils/getValidationErrors'
-import { uploadImage } from '../../api/spot-list-api'
+import { uploadImage, updateUserData } from '../../api/spot-list-api'
 import { environment } from '../../shared/environments'
 
 import {
@@ -28,7 +28,7 @@ export const Profile = () => {
 
   const theme = useTheme()
 
-  const { user } = useAuth()
+  const { user, updateUser } = useAuth()
   const { addToast } = useToast()
   const navigate = useNavigate()
 
@@ -61,7 +61,19 @@ export const Profile = () => {
 
         await schema.validate(data, { abortEarly: false })
 
-        console.log('funcionou')
+        // Adiciono uma nova propriedade no objeto
+        Object.assign(data, {
+          id: user.id,
+        })
+
+        const { data: userUpdated } = await updateUserData(data)
+
+        updateUser(userUpdated)
+
+        addToast({
+          type: 'success',
+          title: 'Dados alterado com sucesso !',
+        })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const error = getValidationErrors(err)
@@ -71,27 +83,30 @@ export const Profile = () => {
 
         addToast({
           type: 'error',
-          title: 'Erro na autenticação',
-          description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
+          title: 'Erro na atualização',
+          description: err.message,
         })
       }
     },
-    [addToast],
+    [addToast, updateUser, user.id],
   )
 
   const handleGoBack = useCallback(() => {
     navigate('/home')
   }, [navigate])
 
-  const handleUploadImage = useCallback(async (event) => {
-    const formData = new FormData()
-    formData.append('avatar', event.target.files[0])
+  const handleUploadImage = useCallback(
+    async (event) => {
+      const formData = new FormData()
+      formData.append('avatar', event.target.files[0])
 
-    const { data } = await uploadImage(formData)
+      const { data } = await uploadImage(formData)
 
-    // updateUser(data)
-    setPicture(data.avatar)
-  }, [])
+      updateUser(data)
+      setPicture(data.avatar)
+    },
+    [updateUser],
+  )
 
   return (
     <BaseLayout
@@ -117,7 +132,7 @@ export const Profile = () => {
                       theme.contrast.length,
                     )}&name=${user.name}`
               }
-              alt="Rodrigo Bighetti"
+              alt={user.name}
             />
 
             <ButtonImage htmlFor="picture">
@@ -126,7 +141,7 @@ export const Profile = () => {
             </ButtonImage>
           </ImageContainer>
 
-          <span>Rodrigo Bighetti</span>
+          <span>{user.name}</span>
         </Header>
 
         <FormContainer ref={formRef} onSubmit={handleSubmit} initialData={user}>

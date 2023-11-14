@@ -48,12 +48,13 @@ const AuthProvider = ({ children }) => {
       value={{
         signIn,
         signOut,
+        updateUser,
         user: data.user,
       }}
     >
       {children}
     </AuthContext.Provider>
-  )``
+  )
 }
 
 function useAuth() {

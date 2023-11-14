@@ -70,4 +70,21 @@ const uploadImage = async (avatar) => {
   }
 }
 
-export { login, signUp, forgotPassword, resetPassword, uploadImage }
+const updateUserData = async (userData) => {
+  try {
+    const result = await api.put(`/users/${userData.id}`, userData)
+
+    return result.data
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
+export {
+  login,
+  signUp,
+  forgotPassword,
+  resetPassword,
+  uploadImage,
+  updateUserData,
+}

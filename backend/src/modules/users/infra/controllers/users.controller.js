@@ -11,6 +11,7 @@ const ListAllUsersService = require('../../services/ListAllUsersService')
 const ForgotPasswordService = require('../../services/ForgotPasswordService')
 const ResetUserPasswordService = require('../../services/ResetUserPasswordService')
 const UpdateAvatarService = require('../../services/UpdateAvatarService')
+const UpdateUserService = require('../../services/UpdateUserService')
 
 module.exports = {
   async createUser(request, response) {
@@ -28,7 +29,16 @@ module.exports = {
   },
 
   async updateUser(request, response) {
-    return response.json({ message: 'User updated' })
+    const updateUser = new UpdateUserService(usersRepository)
+
+    const { userId } = request.params
+
+    const user = await updateUser.execute({
+      id: userId,
+      ...request.body,
+    })
+
+    return response.json({ data: user })
   },
 
   async deleteUser(request, response) {
