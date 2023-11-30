@@ -61,7 +61,7 @@ module.exports = {
   },
 
   async createPlaylist(request, response) {
-    const { title, description, tracks } = request.body
+    const { title, description, tracks = null } = request.body
     const { id } = request.user
 
     const createPlaylistService = new CreatePlaylistService(playlistRepository)
@@ -69,7 +69,7 @@ module.exports = {
     const playlistCreated = await createPlaylistService.execute({
       title,
       description,
-      tracks: JSON.stringify(tracks),
+      tracks: tracks ? JSON.stringify(tracks) : null,
       user_id: id,
     })
 

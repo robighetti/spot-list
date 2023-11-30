@@ -6,7 +6,7 @@ module.exports = {
       [Segments.BODY]: {
         title: Joi.string().required(),
         description: Joi.string().allow(null, ''),
-        tracks: Joi.array().required(),
+        tracks: Joi.array().allow(null),
       },
     })
   },

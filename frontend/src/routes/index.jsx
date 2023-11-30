@@ -11,6 +11,8 @@ import {
   ResetPasssword,
   Dashboard,
   Profile,
+  Playlist,
+  PlaylistDetails,
 } from '../pages'
 
 export const AppRoutes = () => {
@@ -39,6 +41,17 @@ export const AppRoutes = () => {
             </Layout>
           }
         />
+
+        <Route
+          path="/playlist"
+          element={
+            <Layout>
+              <Playlist />
+            </Layout>
+          }
+        />
+
+        <Route path="/playlist/details/:id" element={<PlaylistDetails />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" />} />
