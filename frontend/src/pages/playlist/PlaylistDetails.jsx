@@ -20,20 +20,11 @@ import { Icon, IconButton } from '@mui/material'
 
 import { SearchText } from './styles'
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '60%',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-}
+import { SearchMusic } from './SearchMusic'
 
 export const PlaylistDetails = () => {
   const formRef = useRef(null)
+  const [openSearch, setOpenSearch] = useState(false)
 
   const navigate = useNavigate()
 
@@ -82,6 +73,14 @@ export const PlaylistDetails = () => {
     console.log(formData)
   }, [])
 
+  const handleModal = useCallback(() => {
+    setOpenSearch(!openSearch)
+  }, [openSearch])
+
+  const handleSearchMusic = useCallback((musics) => {
+    console.log(musics)
+  }, [])
+
   return (
     <BaseLayout
       toolbar={
@@ -105,6 +104,14 @@ export const PlaylistDetails = () => {
           <Input name="description" placeholder="Descrição da Playlist" />
         </Form>
 
+        {openSearch && (
+          <SearchMusic
+            handleModal={handleModal}
+            open={openSearch}
+            handleMusics={handleSearchMusic}
+          />
+        )}
+
         <Box marginTop={3}>
           <Accordion>
             <AccordionSummary
@@ -117,12 +124,13 @@ export const PlaylistDetails = () => {
             <AccordionDetails>
               <Box flex={1}>
                 <SearchText>
-                  Pesquise aqui suas musicas
+                  Pesquise aqui suas musicas {'-->'}
                   <IconButton
                     style={{
                       width: '50px',
                       marginLeft: '8px',
                     }}
+                    onClick={handleModal}
                   >
                     <Icon>search</Icon>
                   </IconButton>

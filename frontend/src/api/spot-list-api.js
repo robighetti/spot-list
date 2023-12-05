@@ -80,6 +80,18 @@ const updateUserData = async (userData) => {
   }
 }
 
+const getTracks = async (params) => {
+  try {
+    const queryString = `${params.query}=${params.value}`
+
+    const result = await api.get(`/lists/tracks?${queryString}`)
+
+    return result.data
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
 export {
   login,
   signUp,
@@ -87,4 +99,5 @@ export {
   resetPassword,
   uploadImage,
   updateUserData,
+  getTracks,
 }
