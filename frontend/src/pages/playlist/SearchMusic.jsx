@@ -35,30 +35,36 @@ export const SearchMusic = ({ handleModal, open, handleMusics }) => {
   const [rows, setRows] = useState([])
 
   const [musicOptions, setMusicOptions] = useState('')
+  const [selectedRows, setSelectedRows] = useState([])
 
   const handleChange = (event) => {
     setMusicOptions(event.target.value)
   }
 
   const columns = [
-    { field: 'albumName', headerName: 'Nome do Album', width: 500 },
-    { field: 'totalOfMusics', headerName: 'Total de Musicas', width: 130 },
+    {
+      field: 'albumName',
+      headerName: 'Nome do Album',
+      width: 400,
+      align: 'left',
+    },
+    {
+      field: 'totalOfMusics',
+      headerName: 'Total de Musicas',
+      width: 130,
+      align: 'right',
+    },
   ]
 
   const handleSelectedMusics = useCallback(() => {
-    handleMusics({
-      id: 1,
-      lastName: 'Snow',
-      firstName: 'Jon',
-      age: 35,
-    })
-  }, [handleMusics])
+    const selected = rows.filter((row) => selectedRows.includes(row.id))
+
+    handleMusics(selected)
+    handleModal()
+  }, [handleMusics, rows, selectedRows, handleModal])
 
   const handleGetMusics = useCallback(
     async ({ search }) => {
-      console.log(musicOptions)
-      console.log(search)
-
       const { data } = await getTracks({
         query: musicOptions,
         value: search,
@@ -139,6 +145,10 @@ export const SearchMusic = ({ handleModal, open, handleMusics }) => {
                   paginationModel: { page: 0, pageSize: 7 },
                 },
               }}
+              onRowSelectionModelChange={(ids) => {
+                setSelectedRows(ids)
+              }}
+              rowSelectionModel={selectedRows}
               pageSizeOptions={[7, 14]}
               checkboxSelection
             />

@@ -18,6 +18,8 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Icon, IconButton } from '@mui/material'
 
+import { savePlaylist } from '../../api/spot-list-api'
+
 import { SearchText } from './styles'
 
 import { SearchMusic } from './SearchMusic'
@@ -25,42 +27,26 @@ import { SearchMusic } from './SearchMusic'
 export const PlaylistDetails = () => {
   const formRef = useRef(null)
   const [openSearch, setOpenSearch] = useState(false)
+  const [musics, setMusics] = useState([])
+  const [selectedRows, setSelectedRows] = useState([])
 
   const navigate = useNavigate()
 
   const { id } = useParams()
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'firstName', headerName: 'First name', width: 130 },
-    { field: 'lastName', headerName: 'Last name', width: 130 },
     {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 90,
+      field: 'albumName',
+      headerName: 'Nome do Album',
+      width: 600,
+      align: 'left',
     },
     {
-      field: 'fullName',
-      headerName: 'Full name',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+      field: 'totalOfMusics',
+      headerName: 'Total de Musicas',
+      width: 130,
+      align: 'right',
     },
-  ]
-
-  const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
   ]
 
   const text = useMemo(() => {
@@ -69,28 +55,47 @@ export const PlaylistDetails = () => {
       : 'Criação de uma nova playlist'
   }, [id])
 
-  const handleSubmit = useCallback(async (formData) => {
-    console.log(formData)
-  }, [])
+  const handleSubmit = useCallback(
+    async (formData) => {
+      const { title, description } = formData
+
+      const playlist = {
+        title,
+        description,
+        tracks: musics,
+      }
+
+      const result = await savePlaylist(playlist)
+
+      console.log(result)
+    },
+    [musics],
+  )
 
   const handleModal = useCallback(() => {
     setOpenSearch(!openSearch)
   }, [openSearch])
 
-  const handleSearchMusic = useCallback((musics) => {
-    console.log(musics)
+  const handleSearchMusic = useCallback((selectedMusics) => {
+    setMusics((prevState) => [...prevState, ...selectedMusics])
   }, [])
+
+  const handleDeleteMusic = useCallback(() => {
+    const selected = musics.filter((music) => !selectedRows.includes(music.id))
+
+    setMusics(selected)
+  }, [setMusics, musics, selectedRows])
 
   return (
     <BaseLayout
       toolbar={
         <FormToolbar
-          handleSave={handleSubmit}
+          handleSave={() => formRef.current?.submitForm()}
           handleBack={() => navigate('/playlist')}
           showNew
           handleNew={() => navigate('/playlist/details/new')}
           showDelete
-          handleDelete={() => console.log('delete')}
+          handleDelete={handleDeleteMusic}
         />
       }
     >
@@ -100,7 +105,7 @@ export const PlaylistDetails = () => {
         </Typography>
 
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <Input name="name" placeholder="Nome da Playlist" />
+          <Input name="title" placeholder="Nome da Playlist" />
           <Input name="description" placeholder="Descrição da Playlist" />
         </Form>
 
@@ -138,7 +143,7 @@ export const PlaylistDetails = () => {
 
                 <Box marginTop={3}>
                   <DataGrid
-                    rows={rows}
+                    rows={musics}
                     columns={columns}
                     initialState={{
                       pagination: {
@@ -147,6 +152,10 @@ export const PlaylistDetails = () => {
                     }}
                     pageSizeOptions={[7, 14]}
                     checkboxSelection
+                    onRowSelectionModelChange={(ids) => {
+                      setSelectedRows(ids)
+                    }}
+                    rowSelectionModel={selectedRows}
                   />
                 </Box>
               </Box>

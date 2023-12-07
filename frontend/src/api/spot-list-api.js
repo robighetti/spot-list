@@ -92,6 +92,26 @@ const getTracks = async (params) => {
   }
 }
 
+const savePlaylist = async (playlist) => {
+  try {
+    const result = await api.post('/lists', playlist)
+
+    return result.data
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
+const getPlaylists = async () => {
+  try {
+    const result = await api.get('/lists')
+
+    return result.data
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
 export {
   login,
   signUp,
@@ -100,4 +120,6 @@ export {
   uploadImage,
   updateUserData,
   getTracks,
+  savePlaylist,
+  getPlaylists,
 }
