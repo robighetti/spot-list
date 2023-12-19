@@ -94,6 +94,14 @@ const getTracks = async (params) => {
 
 const savePlaylist = async (playlist) => {
   try {
+    const { id } = playlist
+
+    if (id) {
+      const result = await api.put(`/lists/${id}`, playlist)
+
+      return result.data
+    }
+
     const result = await api.post('/lists', playlist)
 
     return result.data
@@ -112,6 +120,16 @@ const getPlaylists = async () => {
   }
 }
 
+const getPlaylistById = async (id) => {
+  try {
+    const result = await api.get(`/lists/${id}`)
+
+    return result.data
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
 export {
   login,
   signUp,
@@ -122,4 +140,5 @@ export {
   getTracks,
   savePlaylist,
   getPlaylists,
+  getPlaylistById,
 }

@@ -28,6 +28,8 @@ export const Playlist = () => {
 
   const [rows, setRows] = useState([])
 
+  const [selectedRow, setSelectedRow] = useState(null)
+
   const [playlist, setPlaylist] = useState({})
 
   const [openModal, setOpenModal] = useState(false)
@@ -59,10 +61,10 @@ export const Playlist = () => {
     setRows(data)
   }, [])
 
-  const handleEdit = useCallback((row) => {
+  const handleEdit = (row) => {
     console.log(row)
     // navigate(`/playlist/details/${row.id}`)
-  }, [])
+  }
 
   useEffect(() => {
     getMusicsByUserInDatabase()
@@ -105,11 +107,15 @@ export const Playlist = () => {
                 <TableCell align="left" width="30px">
                   <Box>
                     <IconButton
+                      key={row.id}
                       id="basic-button"
                       aria-controls={open ? 'basic-menu' : undefined}
                       aria-haspopup="true"
                       aria-expanded={open ? 'true' : undefined}
-                      onClick={handleOpenMenu}
+                      onClick={(event) => {
+                        handleOpenMenu(event)
+                        setSelectedRow(row)
+                      }}
                     >
                       <Icon>more_horiz</Icon>
                     </IconButton>
@@ -128,13 +134,21 @@ export const Playlist = () => {
                         horizontal: 'left',
                       }}
                     >
-                      <MenuItem onClick={() => handleEdit(row)}>
+                      <MenuItem
+                        onClick={() => {
+                          navigate(`/playlist/details/${selectedRow.id}`)
+                        }}
+                      >
                         <IconButton>
                           <Icon>edit</Icon>
                         </IconButton>
                         Editar
                       </MenuItem>
-                      <MenuItem onClick={handleCloseMenu}>
+                      <MenuItem
+                        onClick={() =>
+                          navigate(`/playlist/details/${selectedRow.id}`)
+                        }
+                      >
                         <IconButton>
                           <Icon>visibility</Icon>
                         </IconButton>

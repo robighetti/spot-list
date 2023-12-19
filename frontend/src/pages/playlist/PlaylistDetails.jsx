@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useMemo } from 'react'
+import React, { useRef, useState, useCallback, useMemo, useEffect } from 'react'
 
 import { useParams, useNavigate } from 'react-router-dom'
 
@@ -18,7 +18,7 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Icon, IconButton } from '@mui/material'
 
-import { savePlaylist } from '../../api/spot-list-api'
+import { savePlaylist, getPlaylistById } from '../../api/spot-list-api'
 
 import { SearchText } from './styles'
 
@@ -29,6 +29,7 @@ export const PlaylistDetails = () => {
   const [openSearch, setOpenSearch] = useState(false)
   const [musics, setMusics] = useState([])
   const [selectedRows, setSelectedRows] = useState([])
+  const [playlist, setPlaylist] = useState({})
 
   const navigate = useNavigate()
 
@@ -65,11 +66,13 @@ export const PlaylistDetails = () => {
         tracks: musics,
       }
 
+      if (id !== 'new') Object.assign(playlist, { id })
+
       const result = await savePlaylist(playlist)
 
       console.log(result)
     },
-    [musics],
+    [musics, id],
   )
 
   const handleModal = useCallback(() => {
@@ -85,6 +88,24 @@ export const PlaylistDetails = () => {
 
     setMusics(selected)
   }, [setMusics, musics, selectedRows])
+
+  const getPlaylist = useCallback(async () => {
+    const { data } = await getPlaylistById(id)
+
+    console.log(data)
+
+    const { tracks } = data
+
+    setMusics(tracks)
+
+    setPlaylist(data)
+  }, [id])
+
+  useEffect(() => {
+    if (id !== 'new') {
+      getPlaylist()
+    }
+  }, [getPlaylist, id])
 
   return (
     <BaseLayout
@@ -104,7 +125,7 @@ export const PlaylistDetails = () => {
           {text}
         </Typography>
 
-        <Form ref={formRef} onSubmit={handleSubmit}>
+        <Form ref={formRef} onSubmit={handleSubmit} initialData={playlist}>
           <Input name="title" placeholder="Nome da Playlist" />
           <Input name="description" placeholder="Descrição da Playlist" />
         </Form>
@@ -118,7 +139,7 @@ export const PlaylistDetails = () => {
         )}
 
         <Box marginTop={3}>
-          <Accordion>
+          <Accordion expanded={id !== 'new'}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
